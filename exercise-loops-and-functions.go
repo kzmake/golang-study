@@ -13,21 +13,25 @@ func isChecked(a float64, b float64) bool {
 	return false
 }
 
-func Sqrt(x float64) float64 {
+func Sqrt(x float64) (float64, int) {
 	var z float64 = 1.0
 
-	for {
+	for i := 0; ; i++ {
 		_z := z
 		z = z - 0.5*(z*z-x)/z
 
 		if isChecked(z, _z) {
-			return z
+			return z, i + 1
 		}
 	}
 }
 
 func main() {
-	fmt.Println("math.Sqrt(2) :\t", math.Sqrt(2))
-	fmt.Println("Sqrt(2)      :\t", Sqrt(2))
-	fmt.Println("  -> Error (Sqrt(2) - math.Sqrt(2)) :", Sqrt(2)-math.Sqrt(2))
+	msqrt := math.Sqrt(2)
+	sqrt, ite := Sqrt(2)
+
+	fmt.Println(ite, "Iterations")
+	fmt.Println("math.Sqrt(2) :\t", msqrt)
+	fmt.Println("Sqrt(2)      :\t", sqrt)
+	fmt.Println("  -> Error (Sqrt(2) - math.Sqrt(2)) :", sqrt-msqrt)
 }
