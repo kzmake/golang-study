@@ -5,7 +5,8 @@ import (
 )
 
 func WordCount(s string) map[string]int {
-	return map[string]int{"x": 1}
+	m := map[string]int{}
+	return m
 }
 
 func main() {
