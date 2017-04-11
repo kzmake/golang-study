@@ -6,6 +6,10 @@ import (
 
 func WordCount(s string) map[string]int {
 	m := map[string]int{}
+
+	for _, word := range strings.Fields(s) {
+	}
+
 	return m
 }
 
