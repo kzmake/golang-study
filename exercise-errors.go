@@ -2,10 +2,30 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
-func Sqrt(x float64) (float64, error) {
-	return 0, nil
+const (
+	CONVERGENCE_VALUE = 1e-10
+)
+
+func Sqrt(x float64) float64 {
+	z := 1.0
+	is_checked := func(a, b float64) bool {
+		if math.Abs(a-b) < CONVERGENCE_VALUE {
+			return true
+		}
+		return false
+	}
+
+	for {
+		pre_z := z
+		z = z - 0.5*(z*z-x)/z
+
+		if is_checked(z, pre_z) {
+			return z
+		}
+	}
 }
 
 func main() {
