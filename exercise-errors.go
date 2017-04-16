@@ -9,6 +9,8 @@ const (
 	CONVERGENCE_VALUE = 1e-10
 )
 
+type ErrNegativeSqrt float64
+
 func Sqrt(x float64) float64 {
 	z := 1.0
 	is_checked := func(a, b float64) bool {
