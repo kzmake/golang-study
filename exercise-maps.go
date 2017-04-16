@@ -2,7 +2,7 @@ package main
 
 import (
 	"golang.org/x/tour/wc"
-    "strings"
+	"strings"
 )
 
 func WordCount(s string) map[string]int {
