@@ -22,7 +22,25 @@ func Walk(t *tree.Tree, ch chan int) {
 }
 
 func Same(t1, t2 *tree.Tree) bool {
-	return false
+	ch1, ch2 := make(chan int, 10), make(chan int, 10)
+
+	go Walk(t1, ch1)
+	go Walk(t2, ch2)
+
+	for {
+		v1, ok1 := <-ch1
+		v2, ok2 := <-ch2
+
+		if !ok1 || !ok2 {
+			break
+		}
+
+		if v1 != v2 {
+			return false
+		}
+	}
+
+	return true
 }
 
 func main() {
