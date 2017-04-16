@@ -35,5 +35,14 @@ func main() {
 		for v := range ch {
 			fmt.Print(v, " ")
 		}
+		fmt.Print("\n")
+	}
+
+	// Test Same
+	{
+		fmt.Println("Same(tree.New(1), tree.New(1)) : ",
+			Same(tree.New(1), tree.New(1)))
+		fmt.Println("Same(tree.New(1), tree.New(2)) : ",
+			Same(tree.New(1), tree.New(2)))
 	}
 }
