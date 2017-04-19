@@ -19,6 +19,15 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 
 	var crawler func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher)
 	crawler = func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher) {
+
+		fetched.mux.Lock()
+		if _, ok := fetched.v[url]; ok {
+			fetched.mux.Unlock()
+			return
+		}
+		fetched.v[url] = true
+		fetched.mux.Unlock()
+
 		if depth <= 0 {
 			return
 		}
