@@ -19,6 +19,7 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 
 	var crawler func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher)
 	crawler = func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher) {
+		defer close(done)
 
 		fetched.mux.Lock()
 		if _, ok := fetched.v[url]; ok {
@@ -36,14 +37,23 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 			fmt.Println(err)
 			return
 		}
+
 		fmt.Printf("found: %s %q\n", url, body)
-		for _, url := range urls {
+
+		childrenDone := make([](chan struct{}), len(urls))
+		for i, url := range urls {
+			childrenDone[i] = make(chan struct{}, 0)
 			go crawler(fetched, url, depth-1, childrenDone[i], fetcher)
+		}
+		for _, done := range childrenDone {
+			<-done
 		}
 		return
 	}
 
+	done := make(chan struct{}, 0)
 	go crawler(fetched, url, depth, done, fetcher)
+	<-done
 }
 
 func main() {
