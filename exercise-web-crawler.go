@@ -15,19 +15,26 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 		mux sync.Mutex
 	}
 
-	if depth <= 0 {
+	fetched := Fetched{v: make(map[string]bool)}
+
+	var crawler func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher)
+	crawler = func(fetched Fetched, url string, depth int, done chan struct{}, fetcher Fetcher) {
+		if depth <= 0 {
+			return
+		}
+		body, urls, err := fetcher.Fetch(url)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Printf("found: %s %q\n", url, body)
+		for _, url := range urls {
+			go crawler(fetched, url, depth-1, childrenDone[i], fetcher)
+		}
 		return
 	}
-	body, urls, err := fetcher.Fetch(url)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("found: %s %q\n", url, body)
-	for _, u := range urls {
-		Crawl(u, depth-1, fetcher)
-	}
-	return
+
+	go crawler(fetched, url, depth, done, fetcher)
 }
 
 func main() {
