@@ -3,18 +3,18 @@ package main
 import "golang.org/x/tour/pic"
 
 func Pic(dx, dy int) [][]uint8 {
-	s := make([][]uint8, dy)
-	for j := range s {
-		s[j] = make([]uint8, dx)
+	pix := make([][]uint8, dy)
+	for y := range pix {
+		pix[y] = make([]uint8, dx)
 	}
 
-	for j := range s {
-		for i := range s[j] {
-			s[j][i] = uint8((i + j) / 2)
+	for y := range pix {
+		for x := range pix[y] {
+			pix[y][x] = uint8((x + y) / 2)
 		}
 	}
 
-	return s
+	return pix
 }
 
 func main() {

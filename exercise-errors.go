@@ -5,9 +5,8 @@ import (
 	"math"
 )
 
-const (
-	ConvergentValue = 1e-10
-)
+// constにできないのでしかたなくvar
+var Epsilon = math.Nextafter(1, 2) - 1
 
 type ErrNegativeSqrt float64
 
@@ -23,18 +22,12 @@ func Sqrt(x float64) (float64, error) {
 	}
 
 	z := float64(1.0)
-	isConvergent := func(a, b float64) bool {
-		if math.Abs(a-b) < ConvergentValue {
-			return true
-		}
-		return false
-	}
 
 	for {
 		preZ := z
 		z = z - 0.5*(z*z-x)/z
 
-		if isConvergent(z, pre_z) {
+		if math.Abs(z-preZ) <= Epsilon {
 			return z, nil
 		}
 	}

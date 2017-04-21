@@ -11,6 +11,10 @@ type rot13Reader struct {
 	r io.Reader
 }
 
+func Rot13(char, initChar byte) byte {
+	return (char-initChar+13)%26 + initChar
+}
+
 func (r *rot13Reader) Read(bytes []byte) (int, error) {
 	n, err := r.r.Read(bytes)
 
@@ -18,15 +22,13 @@ func (r *rot13Reader) Read(bytes []byte) (int, error) {
 		return 0, err
 	}
 
-	rot13 := func(c, init_c byte) byte {
-		return (c-init_c+13)%26 + init_c
-	}
-
+	lowerCaseReg := regexp.MustCompile(`[a-z]`)
+	upperCaseReg := regexp.MustCompile(`[A-Z]`)
 	for i, c := range bytes {
-		if regexp.MustCompile(`[a-z]`).Match([]byte{c}) {
-			bytes[i] = rot13(c, 'a')
-		} else if regexp.MustCompile(`[A-Z]`).Match([]byte{c}) {
-			bytes[i] = rot13(c, 'A')
+		if lowerCaseReg.Match([]byte{c}) {
+			bytes[i] = Rot13(c, 'a')
+		} else if upperCaseReg.Match([]byte{c}) {
+			bytes[i] = Rot13(c, 'A')
 		}
 	}
 
